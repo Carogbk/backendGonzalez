@@ -1,9 +1,10 @@
 import fs from "fs/promises";
 
-class ProductManager {
+export default class ProductManager {
     constructor() {
         this.element = [];
-        // this.loadProductsFromFile();
+        this.path = `products.json`;
+        this.loadProductsFromFile();
     }
 
     async loadProductsFromFile() {
@@ -12,8 +13,15 @@ class ProductManager {
             this.element = JSON.parse(data);
         } catch (err) {
             console.log('No se pudo cargar el archivo de productos.');
+            this.#saveEvent([])
         }
     }
+
+    async #saveEvent(events) {
+        await fs.writeFile(this.path, JSON.stringify(events));
+        this.events = events;
+        return events;
+      }
 
     getElement() {
         this.saveProductsToFile();
@@ -52,11 +60,18 @@ class ProductManager {
     }
 
     getProductById(id) {
-        const item = this.element.find(x => x.id === id);
+        const item = this.element.find(x => x.id == id);
         if (item) {
             console.log("Producto existente:", item);
+            return item
         } else {
             console.log("Not found");
+            const mgs = [
+                {
+                    'Error': 'Producto No Existe.'
+                }
+            ]
+            return mgs;
         }
     }
 
@@ -114,9 +129,9 @@ class ProductManager {
 // product.getProductById(5)
 // product.getProductById(1)
 
-const product = new ProductManager();
-await product.addProduct('Pelota 2', 'Futbol 11 River', 7000, 'Sin imagen', 'A0002', 20)
-console.log('Productos Agregados:', product.getElement());
+// const product = new ProductManager();
+// await product.addProduct('Pelota 7', 'Futbol 11 sin motivo', 7000, 'Sin imagen', 'A0011', 20)
+// console.log('Productos Agregados:', product.getElement());
 
 // product.addProduct('Pelota 1', 'Futbol 11 Talleres', 7000, 'Sin imagen', 'A0001', 10)
 //     .then(() => {
