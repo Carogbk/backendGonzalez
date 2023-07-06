@@ -8,8 +8,14 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/products", async (req, res) => {
   try {
-    const eventos = await productManager.getElement();
-    res.send(eventos);
+    const productsList = await productManager.getElement();
+    const limit = parseInt(req.query.limit);
+    if(limit){
+      const limitedProducts = productsList.slice(0, limit); 
+      res.json(limitedProducts);
+    }else{
+      res.send(productsList);
+    }
   } catch (e) {
     res.status(502).send({error: true});
   }
