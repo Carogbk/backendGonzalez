@@ -1,10 +1,12 @@
 
 import fs from "fs/promises";
-
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+const __dirname = dirname(fileURLToPath(import.meta.url));
 export default class CartManager {
   constructor() {
     this.carts = [];
-    this.path = "carts.json";
+    this.path = `${__dirname}/db/carts.json`;
     this.loadCartsFromFile();
   }
 

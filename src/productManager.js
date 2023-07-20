@@ -1,15 +1,17 @@
 import fs from "fs/promises";
-
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+const __dirname = dirname(fileURLToPath(import.meta.url));
 export default class ProductManager {
     constructor() {
         this.element = [];
-        this.path = `products.json`;
+        this.path = `${__dirname}/db/products.json`;
         this.loadProductsFromFile();
     }
 
     async loadProductsFromFile() {
         try {
-            const data = await fs.readFile('products.json', 'utf-8');
+            const data = await fs.readFile(this.path, 'utf-8');
             this.element = JSON.parse(data);
         } catch (err) {
             console.log('No se pudo cargar el archivo de productos.');
@@ -29,7 +31,7 @@ export default class ProductManager {
     }
 
     async addProduct(product) {
-        const data = await fs.readFile('./products.json', 'utf-8');
+        const data = await fs.readFile(this.path, 'utf-8');
         this.element = JSON.parse(data);
         const {
             title,
@@ -101,7 +103,7 @@ export default class ProductManager {
     async saveProductsToFile() {
         try {
             const data = JSON.stringify(this.element);
-            await fs.writeFile('products.json', data, 'utf-8');
+            await fs.writeFile(this.path, data, 'utf-8');
         } catch (err) {
             console.log('No se pudo guardar el archivo de productos.');
         }
